@@ -100,7 +100,7 @@ You can view a solution to this icon-button example in this
 
 This base-template solution hasn't been used in a production environment yet, but initial results are promising. It appears to solve all the criteria described above. In the icon-button example:
 
-* An instances of icon-button will successfully report that it is an `instanceof` a plain-button.
+* An instance of icon-button will successfully report that it is an `instanceof` a plain-button.
 * The icon-button component can fill in the `<content>` insertion point defined by plain-button.
 * A buttonClick() method defined by plain-button is inherited by icon-button.
 * A showMessage() method defined by plain-button is overridden by icon-button.
