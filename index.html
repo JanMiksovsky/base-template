@@ -3,13 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>Subclass test</title>
+<title>base-template</title>
 <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="base-template.html">
 
+<style>
+p {
+  max-width: 800px;
+}
+</style>
+
 <!--
-A simple base class
+A simple button base class
 -->
 <!-- Attributes like disabled will be available in subclasses. -->
 <polymer-element name="plain-button" attributes="disabled">
@@ -55,8 +61,12 @@ A simple base class
 <script>
 Polymer({
 
-  /* A base class method which subclasses can override. */
   buttonClick: function() {
+    this.showMessage();
+  },
+
+  /* A base class method which subclasses can override. */
+  showMessage: function() {
     console.log( "I'm a plain button" );
   }
 
@@ -66,7 +76,8 @@ Polymer({
 
 
 <!--
-A simple subclass that fills in content in its base class.
+A button subclass that fills in content in its base class and overrides some
+inherited styling and behavior.
 -->
 <polymer-element name="icon-button" extends="plain-button" attributes="icon">
 <link rel="import" href="bower_components/core-icons/core-icons.html">
@@ -93,7 +104,7 @@ A simple subclass that fills in content in its base class.
 Polymer({
 
   /* Override a base class method. */
-  buttonClick: function() {
+  showMessage: function() {
     console.log( "I'm an icon button" );
   }
 
@@ -104,10 +115,33 @@ Polymer({
 </head>
 
 <body unresolved>
-  <plain-button>Plain button</plain-button>
-  <plain-button disabled="true">Disabled plain button</plain-button>
-  <icon-button icon="menu">Icon button</icon-button>
-  <icon-button icon="close" disabled="true">Disabled icon button</icon-button>
+  <p>
+    First, some instances of a plain-button base class. The base class sets some
+    host styles (font family, size, and weight), and applies styles to the
+    contained button. It also defines a click handler on the button: when
+    clicked, the button will display a console message. The component exposes
+    a "disabled" attribute which controls whether the button is enabled or not.
+  </p>
+  <p>
+    <plain-button>Plain button</plain-button>
+    <plain-button disabled="true">Disabled plain button</plain-button>
+  </p>
+  <p>
+    Next, we have some instances of a component called icon-button which
+    subclasses plain-button. Programatically, an icon-button will pass an
+    "instanceof" test when asked if it is an instance of plain-button. All
+    members of the base class' API are inherited, including plain-button's
+    "disabled" attribute. Styling is also inherited, and the subclass can even
+    override styling from the base class (now the font weight is bold). It adds
+    an icon to the template and, critically, the icon will appear
+    <em>inside</em> the button defined by the base class' template. Finally, the
+    subclass overrides the base's class method so that a different message is
+    displayed in the console when the button is clicked.
+  </p>
+  <p>
+    <icon-button icon="menu">Icon button</icon-button>
+    <icon-button icon="close" disabled="true">Disabled icon button</icon-button>
+  </p>
 </body>
 
 </html>
