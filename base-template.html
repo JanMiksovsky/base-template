@@ -1,0 +1,89 @@
+<!--
+Allow a subclass to fill in slots in a base class' template.
+
+This works by folding a base class' shadow subtree into that of the subclass.
+This is a workaround for the fact that web components can't yet project content
+into an older shadow root.
+-->
+
+<polymer-element name="base-template">
+<script>
+Polymer({
+
+  attached: function() {
+    // Need to wait until the element has been attached — that seems to be the
+    // earliest point at which all shadow roots will be available. The ready()
+    // handler appears to occur too early to do the folding.
+    // REVIEW: Is there some earlier point at which we could do this?
+    this.foldShadow();
+  },
+
+  /*
+   * Fold the base class' shadow into the subclass' shadow at this point
+   * indicated by this element.
+   */
+  foldShadow: function() {
+
+    var subroot = this._findShadowRoot( this );
+    var baseRoot = subroot.olderShadowRoot;
+    if ( !baseRoot ) {
+      // No place for us to put sublass content; leave as is.
+      return;
+    }
+
+    // See whether base root has a content element.
+    var content = baseRoot.querySelector( "content" );
+    if ( content ) {
+      // Replace content element with everything inside this base-template.
+      // I.e., fold the subclass' content into the base class' template.
+      this._replaceWithNodes( content, this.children );
+    }
+
+    // Identify styles at the top level of the base class's shadow.
+    var baseStyles = Array.prototype.filter.call( baseRoot.children, function( child ) {
+      return ( child instanceof HTMLStyleElement );
+    });
+
+    // Fold the base class' root back into this element, replacing this
+    // base-instance placeholder.
+    this._replaceWithNodes( this, baseRoot.children );
+
+    // Hoist base styles to top of subclass' shadow.
+    var subrootFirstChild = subroot.children[0];
+    baseStyles.forEach( function( baseStyle ) {
+      subroot.insertBefore( baseStyle, subrootFirstChild );
+    });
+
+    // TODO: Remove base shadow root, now that it's no longer necessary?
+    // Not clear how you can actually remove a shadow root once it's there.
+  },
+
+  // Walk up the tree until we find the shadow root that holds this element.
+  _findShadowRoot: function( element ) {
+    if ( !element ) {
+      return null;
+    }
+    if ( element instanceof DocumentFragment ) {
+      return element;
+    }
+    return this._findShadowRoot( element.parentNode );
+  },
+
+  // Replace the single given old node with an array of new nodes.
+  _replaceWithNodes: function( oldNode, newNodes ) {
+    var insertBeforeNode = oldNode;
+    var parent = oldNode.parentNode;
+    // One wrinkle is that the native insertBefore() call will destructively
+    // modify the newNodes array, whereas the polyfilled insertBefore() doesn't.
+    // By working from end to start, the same code works in both cases.
+    for ( var i = newNodes.length - 1; i >= 0; i-- ) {
+      var newNode = newNodes[i];
+      parent.insertBefore( newNode, insertBeforeNode );
+      insertBeforeNode = newNode;
+    }
+    oldNode.remove();
+  }
+
+})
+</script>
+</polymer-element>

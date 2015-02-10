@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Subclass test</title>
+<script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="base-template.html">
+
+<!--
+A simple base class
+-->
+<!-- Attributes like disabled will be available in subclasses. -->
+<polymer-element name="plain-button" attributes="disabled">
+<template>
+  <style>
+  /* Set some host styling just to prove it works in subclasses, too. */
+  :host {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: normal;
+  }
+
+  #button {
+    border: 1px solid #888;
+    background: #e8e8e8;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    padding: 5px 8px;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  #button:hover {
+    border-color: black;
+    background: #f8f8f8;
+  }
+
+  #button:active {
+    background: #bbb;
+  }
+
+  #button[disabled] {
+    border-color: #aaa;
+    background: white;
+  }
+  </style>
+  <!-- The follow #button member will be available to subclasses, too. -->
+  <button id="button" on-tap="{{buttonClick}}" disabled?="{{disabled}}">
+    <content></content>
+  </button>
+</template>
+<script>
+Polymer({
+
+  /* A base class method which subclasses can override. */
+  buttonClick: function() {
+    console.log( "I'm a plain button" );
+  }
+
+})
+</script>
+</polymer-element>
+
+
+<!--
+A simple subclass that fills in content in its base class.
+-->
+<polymer-element name="icon-button" extends="plain-button" attributes="icon">
+<link rel="import" href="bower_components/core-icons/core-icons.html">
+<template>
+  <style>
+  /* Override a style defined in the base class. */
+  :host {
+    font-weight: bold;
+  }
+
+  #icon {
+    height: 14px;
+    margin-right: 3px;
+    width: 14px;
+  }
+  </style>
+  <!-- The base-template element is where the magic happens. -->
+  <base-template>
+    <core-icon id="icon" icon="{{icon}}"></core-icon>
+    <content></content>
+  </base-template>
+</template>
+<script>
+Polymer({
+
+  /* Override a base class method. */
+  buttonClick: function() {
+    console.log( "I'm an icon button" );
+  }
+
+})
+</script>
+</polymer-element>
+
+</head>
+
+<body unresolved>
+  <plain-button>Plain button</plain-button>
+  <plain-button disabled="true">Disabled plain button</plain-button>
+  <icon-button icon="menu">Icon button</icon-button>
+  <icon-button icon="close" disabled="true">Disabled icon button</icon-button>
+</body>
+
+</html>

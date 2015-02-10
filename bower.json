@@ -1,0 +1,18 @@
+{
+  "name": "base-template",
+  "description": "Allow a subclass to fill in slots in a base class' template.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "base-template.html",
+  "dependencies": {
+    "webcomponentsjs": "Polymer/webcomponentsjs#0.5.4",
+    "polymer": "Polymer/polymer#0.5.4",
+    "core-icons": "Polymer/core-icons#0.5.4"
+  },
+  "keywords": [
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*"
+  ]
+}
