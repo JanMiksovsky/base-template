@@ -115,5 +115,6 @@ So this solution appears to pass our test. As a bonus, the solution provides som
 
 This solution has some limitations:
 * Every subclass instance must perform non-trivial DOM modifications at run-time, which impairs performance. In practice, this solution is probably fine in small degrees, but would noticeably degrade performance on a page creating many instances of a subclass.
-* Because the base class' Shadow DOM subtree is destructively modified, base class code assumptions about the DOM hierarchy might be violated in a subclass. It remains to be seen whether such problems ever come up in practice. It's also likely that, with a little care, the base class code could be fixed to avoid these problems.
+* The solution currently assumes the base class contains a single `<content>` insertion point with no `select` clause.
+* Additionally, the base class' `<content>` element will be destructively replaced. Base class JavaScript or CSS that looks for that element, e.g., by `id`, will fail.
 * As written, this technique cannot be used to subclass standard HTML elements. For this reason, plain-button composes a regular button, rather than extending HTMLButtonElement with `is="plain-button"`.
