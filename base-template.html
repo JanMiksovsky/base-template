@@ -36,7 +36,7 @@ Polymer({
     if ( content ) {
       // Replace content element with everything inside this base-template.
       // I.e., fold the subclass' content into the base class' template.
-      this._replaceWithNodes( content, this.children );
+      this._replaceWithNodes( content, this.childNodes );
     }
 
     // Identify styles at the top level of the base class's shadow.
@@ -46,10 +46,10 @@ Polymer({
 
     // Fold the base class' root back into this element, replacing this
     // base-instance placeholder.
-    this._replaceWithNodes( this, baseRoot.children );
+    this._replaceWithNodes( this, baseRoot.childNodes );
 
     // Hoist base styles to top of subclass' shadow.
-    var subrootFirstChild = subroot.children[0];
+    var subrootFirstChild = subroot.childNodes[0];
     baseStyles.forEach( function( baseStyle ) {
       subroot.insertBefore( baseStyle, subrootFirstChild );
     });
