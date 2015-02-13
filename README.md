@@ -117,6 +117,8 @@ This solution has some limitations:
 * Every subclass instance must perform non-trivial DOM modifications at run-time, which impairs performance. In practice, this solution is probably fine in small degrees, but would noticeably degrade performance on a page creating many instances of a subclass.
 * The solution currently assumes the base class contains a single `<content>` insertion point with no `select` clause.
 * Additionally, the base class' `<content>` element will be destructively replaced. Base class JavaScript or CSS that looks for that element, e.g., by `id`, will fail.
-* As written, this technique cannot be used to subclass standard HTML elements. For this reason, plain-button composes a regular button, rather than extending HTMLButtonElement with `is="plain-button"`.
+* As written, this technique can be used to subclass standard HTML elements —
+but only in a browser with native Shadow DOM. Future work here could be done to
+see if this could be made to work work under polyfilled Shadow DOM as well.
 
 For a workaround, this solution feels quite clean. All the magic is contained in a single web component that can be added to a project by normal means. Moreover, the base-template component permits syntax that exactly parallels the hoped-for syntax for the `<shadow>` element. Perhaps if this approach finds traction, that would lend weight to implementing a proper solution in the HTML standard and the native browser implementations.
